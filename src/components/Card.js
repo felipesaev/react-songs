@@ -1,4 +1,5 @@
 import React from "react";
+
 export const Card = ({ song }) => {
     
   return (
@@ -14,4 +15,5 @@ export const Card = ({ song }) => {
     </div>
   );
 };
+
 export default Card;

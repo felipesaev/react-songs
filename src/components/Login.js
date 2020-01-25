@@ -1,6 +1,7 @@
 import React from "react";
-
+import logo from "../logo.svg";
 import { AuthContext } from "../App";
+
 export const Login = () => {
   const { dispatch } = React.useContext(AuthContext);
   const initialState = {
@@ -9,14 +10,17 @@ export const Login = () => {
     isSubmitting: false,
     errorMessage: null
   };
-const [data, setData] = React.useState(initialState);
-const handleInputChange = event => {
+
+  const [data, setData] = React.useState(initialState);
+
+  const handleInputChange = event => {
     setData({
       ...data,
       [event.target.name]: event.target.value
     });
   };
-const handleFormSubmit = event => {
+
+  const handleFormSubmit = event => {
     event.preventDefault();
     setData({
       ...data,
@@ -53,14 +57,15 @@ const handleFormSubmit = event => {
         });
       });
   };
-return (
+
+  return (
     <div className="login-container">
       <div className="card">
         <div className="container">
           <form onSubmit={handleFormSubmit}>
             <h1>Login</h1>
 
-			<label htmlFor="email">
+            <label htmlFor="email">
               Email Address
               <input
                 type="text"
@@ -71,7 +76,7 @@ return (
               />
             </label>
 
-			<label htmlFor="password">
+            <label htmlFor="password">
               Password
               <input
                 type="password"
@@ -82,13 +87,13 @@ return (
               />
             </label>
 
-			{data.errorMessage && (
+            {data.errorMessage && (
               <span className="form-error">{data.errorMessage}</span>
             )}
 
-           <button disabled={data.isSubmitting}>
+            <button disabled={data.isSubmitting}>
               {data.isSubmitting ? (
-                "Loading..."
+                <img className="spinner" src={logo} alt="loading icon" />
               ) : (
                 "Login"
               )}
@@ -99,4 +104,5 @@ return (
     </div>
   );
 };
+
 export default Login;

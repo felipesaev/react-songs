@@ -1,11 +1,17 @@
 import React from "react";
 import { AuthContext } from "../App";
 import Card from "./Card";
+
+export const SongContext = React.createContext();
+
 const initialState = {
   songs: [],
   isFetching: false,
   hasError: false,
+  isSongSubmitting: false,
+  songHasError: false,
 };
+
 const reducer = (state, action) => {
   switch (action.type) {
     case "FETCH_SONGS_REQUEST":
@@ -26,14 +32,36 @@ const reducer = (state, action) => {
         hasError: true,
         isFetching: false
       };
+    case "ADD_SONG_REQUEST":
+      return {
+        ...state,
+        isSongSubmitting: true,
+        songHasError: false,
+      }
+    case "ADD_SONG_SUCCESS":
+      return {
+        ...state,
+        isSongSubmitting: false,
+        songs: [...state.songs, action.payload]
+      }
+    case "ADD_SONG_FAILURE":
+      return {
+        ...state,
+        isSongSubmitting: false,
+        songHasError: true,
+      }
     default:
       return state;
   }
 };
+
 export const Home = () => {
   const { state: authState } = React.useContext(AuthContext);
   const [state, dispatch] = React.useReducer(reducer, initialState);
-React.useEffect(() => {
+
+  
+
+  React.useEffect(() => {
     dispatch({
       type: "FETCH_SONGS_REQUEST"
     });
@@ -66,21 +94,28 @@ React.useEffect(() => {
 
   return (
     <React.Fragment>
+    <SongContext.Provider value={{
+      state,
+      dispatch
+    }}>
+      
+    </SongContext.Provider>
     <div className="home">
       {state.isFetching ? (
         <span className="loader">LOADING...</span>
       ) : state.hasError ? (
         <span className="error">AN ERROR HAS OCCURED</span>
       ) : (
-        <span>
+        <React.Fragment>
           {state.songs.length > 0 &&
             state.songs.map(song => (
               <Card key={song.id.toString()} song={song} />
             ))}
-        </span>
+        </React.Fragment>
       )}
     </div>
     </React.Fragment>
   );
 };
+
 export default Home;
